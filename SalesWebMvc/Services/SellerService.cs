@@ -33,11 +33,6 @@ namespace SalesWebMvc.Services
         // aula 255
         public void Insert(Seller obj)
         {
-            // provisório - insere um departamento no objeto
-            // apenas para não gerar erro
-            // em breve sera criado um html proprio para escolha
-            // do departamento...
-            obj.Department = _context.Department.First();
             _context.Add(obj);
             _context.SaveChanges();
         }

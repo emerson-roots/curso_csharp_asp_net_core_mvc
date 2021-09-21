@@ -44,6 +44,9 @@ namespace SalesWebMvc
 
             //aula 254
             services.AddScoped<SellerService>();
+
+            //aula 257
+            services.AddScoped<DepartmentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
