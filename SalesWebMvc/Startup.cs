@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Data;
 using SalesWebMvc.Models;
+using SalesWebMvc.Services;
 
 namespace SalesWebMvc
 {
@@ -39,7 +40,10 @@ namespace SalesWebMvc
                         builder.MigrationsAssembly("SalesWebMvc")));
 
             // aula 251 - injeta dependencia para popular base de dados com dados iniciais
-            services.AddScoped<SeedingService>(); 
+            services.AddScoped<SeedingService>();
+
+            //aula 254
+            services.AddScoped<SellerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
