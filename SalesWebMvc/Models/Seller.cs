@@ -16,6 +16,13 @@ namespace SalesWebMvc.Models
         // associacao
         public Department Department { get; set; }
 
+        // aula 256
+        // usando este padrão de nomes (nome_classe_relação+nome_chave)
+        // o Entity Framework garante que o id da relação seja inserido também em novos registros
+        // corrigindo assim o problema de integridade referencial (chave não nula)
+        // da aula anterior
+        public int DepartmentId { get; set; }
+
         // ICollection - responsavel pela associacao com as tabelas
         // Uma coleção genérica que aceita Lists, conjuntos HashSets, Etc
         // além disso, a coleção já inicia instanciada com o "new List<TIPO_OBJETO>()"
