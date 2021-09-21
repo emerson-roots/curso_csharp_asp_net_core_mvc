@@ -14,6 +14,9 @@ namespace SalesWebMvc.Data
         {
         }
 
-        public DbSet<SalesWebMvc.Models.Department> Department { get; set; }
+        // aula 251 - mapeia entidades para serem instanciadas no BD
+        public DbSet<Department> Department { get; set; }
+        public DbSet<Seller> Seller { get; set; }
+        public DbSet<SalesRecord> SalesRecord { get; set; }
     }
 }
