@@ -43,5 +43,35 @@ namespace SalesWebMvc.Controllers
             _sellerService.Insert(seller);
             return RedirectToAction(nameof(Index));
         }
+
+        // aula 258
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                // retorno provisorio - instancia resposta basica
+                // posteriormente será personalizado c/ pagina de erro
+                return NotFound();
+            }
+
+            // foi passado o id.value pq o parametro é "nullable" (opcional)
+            var obj = _sellerService.FindById(id.Value);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            // se tudo correr corretamente, envia o objeto para view
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            _sellerService.Remove(id);
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
