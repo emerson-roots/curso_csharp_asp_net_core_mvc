@@ -6,6 +6,7 @@ using SalesWebMvc.Services.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace SalesWebMvc.Controllers
 {
@@ -23,26 +24,31 @@ namespace SalesWebMvc.Controllers
             _departmentService = departmentService;
         }
 
-        public IActionResult Index()
+        // alterado na aula 264 p/ async
+        public async Task<IActionResult> Index()
         {
 
-            var list = _sellerService.FindAll();
+            var list = await _sellerService.FindAllAsync();
             return View(list);
         }
 
         // aula 255
-        public IActionResult Create()
+        //
+        // alterado na aula 264 p/ async
+        public async Task<IActionResult> Create()
         {
             // alteracoes da aula 257 - 6:40
-            var departments = _departmentService.FindAll();
+            var departments = await _departmentService.FindAllAsync();
             var viewModel = new SellerFormViewModel { Departments = departments };
             return View(viewModel);
         }
 
         // aula  255
+        //
+        // alterado na aula 264 p/ async
         [HttpPost]
         [ValidateAntiForgeryToken] // previne a aplicação contra ataques CSRF
-        public IActionResult Create(Seller seller)
+        public async Task<IActionResult> Create(Seller seller)
         {
             // aula 263 - validacao
             // verifica se o form NAO ESTA VALIDO
@@ -51,18 +57,20 @@ namespace SalesWebMvc.Controllers
             if (!ModelState.IsValid)
             {
 
-                var departments = _departmentService.FindAll();
+                var departments = await _departmentService.FindAllAsync();
                 var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
                 return View(viewModel);
             }
-            _sellerService.Insert(seller);
+            await _sellerService.InsertAsync(seller);
             return RedirectToAction(nameof(Index));
         }
 
         // aula 258
         // Delete do tipo GET para enviar os dados da lista
         // para a pagina de confirmação de deleção
-        public IActionResult Delete(int? id)
+        //
+        // alterado na aula 264 p/ async
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -71,7 +79,7 @@ namespace SalesWebMvc.Controllers
             }
 
             // foi passado o id.value pq o parametro é "nullable" (opcional)
-            var obj = _sellerService.FindById(id.Value);
+            var obj = await _sellerService.FindByIdAsync(id.Value);
             if (obj == null)
             {
                 // alterado na aula 261
@@ -84,16 +92,20 @@ namespace SalesWebMvc.Controllers
 
         // aula 258
         // confirma a deleção na após confirmação na pagina Delete
+        //
+        // alterado na aula 264 p/ async
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _sellerService.Remove(id);
+            await _sellerService.RemoveAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
         // aula 259
-        public IActionResult Details(int? id)
+        //
+        // alterado na aula 264 p/ async
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -101,7 +113,7 @@ namespace SalesWebMvc.Controllers
                 return RedirectToAction(nameof(Error), new { message = "Id not Provided" });
             }
 
-            var obj = _sellerService.FindById(id.Value);
+            var obj = await _sellerService.FindByIdAsync(id.Value);
             if (obj == null)
             {
                 // alterado na aula 261
@@ -113,7 +125,9 @@ namespace SalesWebMvc.Controllers
 
         // aula 260 - GET
         // abre a tela para editar vendedor com os dados preenchidos
-        public IActionResult Edit(int? id)
+        //
+        // alterado na aula 264 p/ async
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -121,14 +135,14 @@ namespace SalesWebMvc.Controllers
                 return RedirectToAction(nameof(Error), new { message = "Id not Provided" });
             }
 
-            var obj = _sellerService.FindById(id.Value);
+            var obj = await _sellerService.FindByIdAsync(id.Value);
             if (obj == null)
             {
                 // alterado na aula 261
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
-            List<Department> departments = _departmentService.FindAll();
+            List<Department> departments = await _departmentService.FindAllAsync();
 
             // preenche o formulario de edicao com os dados do objeto buscado por id
             SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departments = departments };
@@ -138,9 +152,11 @@ namespace SalesWebMvc.Controllers
 
         // aula 260
         // Edit com o metodo POST
+        //
+        // alterado na aula 264 p/ async
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Seller seller)
+        public async Task<IActionResult> Edit(int id, Seller seller)
         {
 
             // aula 263 - validacao
@@ -149,7 +165,7 @@ namespace SalesWebMvc.Controllers
             // a mesma view para corrigir os dados
             if (!ModelState.IsValid)
             {
-                var departments = _departmentService.FindAll();
+                var departments = await _departmentService.FindAllAsync();
                 var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
                 return View(viewModel);
             }
@@ -162,7 +178,7 @@ namespace SalesWebMvc.Controllers
 
             try
             {
-                _sellerService.Update(seller);
+                await _sellerService.UpdateAsync(seller);
                 return RedirectToAction(nameof(Index));
             }
             catch (ApplicationException e)

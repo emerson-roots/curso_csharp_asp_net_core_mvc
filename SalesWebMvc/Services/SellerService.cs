@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Services.Exceptions;
+using System.Threading.Tasks;
 
 namespace SalesWebMvc.Services
 {
@@ -26,39 +27,54 @@ namespace SalesWebMvc.Services
         //
         // posteriormente será abordado o conceito ASSÍNCRONO, tornando a aplicação mais
         // performatica
-        public List<Seller> FindAll()
+        //
+        // alterado na aula 264 p/ async
+        public async Task<List<Seller>> FindAllAsync()
         {
-            return _context.Seller.ToList();
+            // alterado na aula 264 p/ async
+            return await _context.Seller.ToListAsync();
         }
 
         // aula 255
-        public void Insert(Seller obj)
+        //
+        // alterado na aula 264 p/ async
+        public async Task InsertAsync(Seller obj)
         {
             _context.Add(obj);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         // aula 258
-        public Seller FindById(int id)
+        //
+        // alterado na aula 264 p/ async
+        public async Task<Seller> FindByIdAsync(int id)
         {
             // metodo alterado na aula 259 - 6:00 aplicando o cenceito de EAGER LOADING
             // com o Include para incluir o departamento associado ao vendedor
-            return _context.Seller.Include(obj => obj.Department).FirstOrDefault(obj => obj.Id == id);
+            //
+            // alterado na aula 264 p/ async
+            return await _context.Seller.Include(obj => obj.Department).FirstOrDefaultAsync(obj => obj.Id == id);
         }
 
         // aula 258
-        public void Remove(int id)
+        //
+        // alterado na aula 264 p/ async
+        public async Task RemoveAsync(int id)
         {
-            var obj = _context.Seller.Find(id);
+            var obj = await _context.Seller.FindAsync(id);
             _context.Seller.Remove(obj);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         // aula 260
-        public void Update(Seller obj)
+        //
+        // alterado na aula 264 p/ async
+        public async Task UpdateAsync(Seller obj)
         {
+            bool hasAny = await _context.Seller.AnyAsync(x => x.Id == obj.Id);
+
             // verifica se o id NAO EXISTE no banco
-            if (!_context.Seller.Any(x => x.Id == obj.Id))
+            if (!hasAny)
             {
                 throw new NotFoundExceptionPersonalized("Id inexistente");
             }
@@ -66,7 +82,7 @@ namespace SalesWebMvc.Services
             try
             {
                 _context.Update(obj);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException e)
             {
@@ -80,5 +96,5 @@ namespace SalesWebMvc.Services
 
         }
 
-        }
     }
+}
