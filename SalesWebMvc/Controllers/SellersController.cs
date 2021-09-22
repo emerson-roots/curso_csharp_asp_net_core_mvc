@@ -94,12 +94,21 @@ namespace SalesWebMvc.Controllers
         // confirma a deleção na após confirmação na pagina Delete
         //
         // alterado na aula 264 p/ async
+        //
+        // alterado na aula 265 ajustando exceção personalizada
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            await _sellerService.RemoveAsync(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _sellerService.RemoveAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (IntegrityExceptionPersonalized e)
+            {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            }
         }
 
         // aula 259

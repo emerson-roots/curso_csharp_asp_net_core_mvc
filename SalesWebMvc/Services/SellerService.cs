@@ -59,11 +59,20 @@ namespace SalesWebMvc.Services
         // aula 258
         //
         // alterado na aula 264 p/ async
+
+        // alterado na aula 265 ajustando exceção personalizada
         public async Task RemoveAsync(int id)
         {
-            var obj = await _context.Seller.FindAsync(id);
-            _context.Seller.Remove(obj);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var obj = await _context.Seller.FindAsync(id);
+                _context.Seller.Remove(obj);
+                await _context.SaveChangesAsync();
+            }
+            catch(DbUpdateException e)
+            {
+                throw new IntegrityExceptionPersonalized("Não é possível deletar o vendedor pois há vendas relacionadas. Detalhes do erro: "+ e.Message);
+            }
         }
 
         // aula 260
