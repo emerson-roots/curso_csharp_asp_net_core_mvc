@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SalesWebMvc.Services
 {   
@@ -40,7 +40,9 @@ namespace SalesWebMvc.Services
         // aula 258
         public Seller FindById(int id)
         {
-            return _context.Seller.FirstOrDefault(obj => obj.Id == id);
+            // metodo alterado na aula 259 - 6:00 aplicando o cenceito de EAGER LOADING
+            // com o Include para incluir o departamento associado ao vendedor
+            return _context.Seller.Include(obj => obj.Department).FirstOrDefault(obj => obj.Id == id);
         }
 
         // aula 258

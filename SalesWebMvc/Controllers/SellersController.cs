@@ -45,6 +45,8 @@ namespace SalesWebMvc.Controllers
         }
 
         // aula 258
+        // Delete do tipo GET para enviar os dados da lista
+        // para a pagina de confirmação de deleção
         public IActionResult Delete(int? id)
         {
             if (id == null)
@@ -65,12 +67,31 @@ namespace SalesWebMvc.Controllers
             return View(obj);
         }
 
+        // aula 258
+        // confirma a deleção na após confirmação na pagina Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
             _sellerService.Remove(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        // aula 259
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var obj = _sellerService.FindById(id.Value);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            return View(obj);
         }
 
     }
