@@ -10,25 +10,35 @@ namespace SalesWebMvc.Models
     {
 
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "{0} requerido")]
+        // aula 263 - chave {0} = nome do atributo "Name"
+        // chave {1} e {2} são os indexes dos parametros passados em StringLength
+        [StringLength(60, MinimumLength = 3, ErrorMessage = "O tamanho do {0} deve conter entre {2} e {1} caracteres")]
         public string Name { get; set; }
 
+        [Required(ErrorMessage = "{0} requerido")]
+        [EmailAddress(ErrorMessage = "Entre com um email valido.")]
         [DataType(DataType.EmailAddress)]
         public string Email{ get; set; }
 
-        // aula 261 - anotação DISPLAY define que como sera
+        // aula 262 - anotação DISPLAY define que como sera
         // mostrado o rótulo dos atributos nas telas.
         [Display(Name = "Birth Date")]
-        // aula 261 - anotação DISPLAY
+        // aula 262 - anotação DISPLAY
         // DataType.Date define que o input no navegador
         // receba somente a data. Sem esta anotação
         // o html estava pedindo hora também
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [Required(ErrorMessage = "{0} requerido")]
         public DateTime BirthDate { get; set; }
 
-        // aula 261 - anotação DISPLAY
+        // aula 262 - anotação DISPLAY
         [Display(Name = "Base Salary")]
         [DisplayFormat(DataFormatString = "{0:F2}")]
+        [Required(ErrorMessage = "{0} requerido")]
+        [Range(100.0, 50000.0, ErrorMessage = "{0} valor mínimo deve ser {1} e o máximo {2}")]
         public double BaseSalary { get; set; }
         // associacao
         public Department Department { get; set; }

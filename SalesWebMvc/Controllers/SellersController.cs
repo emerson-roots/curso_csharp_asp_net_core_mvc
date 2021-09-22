@@ -44,6 +44,17 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken] // previne a aplicação contra ataques CSRF
         public IActionResult Create(Seller seller)
         {
+            // aula 263 - validacao
+            // verifica se o form NAO ESTA VALIDO
+            // se estiver invalido, retorna para
+            // a mesma view para corrigir os dados
+            if (!ModelState.IsValid)
+            {
+
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(viewModel);
+            }
             _sellerService.Insert(seller);
             return RedirectToAction(nameof(Index));
         }
@@ -131,6 +142,18 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Seller seller)
         {
+
+            // aula 263 - validacao
+            // verifica se o form NAO ESTA VALIDO
+            // se estiver invalido, retorna para
+            // a mesma view para corrigir os dados
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(viewModel);
+            }
+
             if (id != seller.Id)
             {
                 // alterado na aula 261
