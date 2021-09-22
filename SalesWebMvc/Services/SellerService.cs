@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using SalesWebMvc.Services.Exceptions;
 
 namespace SalesWebMvc.Services
-{   
+{
     // aula 254 - necessário registrar o serviço no sistema de injeção de dependencia
     // no Startup.cs
     public class SellerService
@@ -53,5 +54,31 @@ namespace SalesWebMvc.Services
             _context.SaveChanges();
         }
 
+        // aula 260
+        public void Update(Seller obj)
+        {
+            // verifica se o id NAO EXISTE no banco
+            if (!_context.Seller.Any(x => x.Id == obj.Id))
+            {
+                throw new NotFoundExceptionPersonalized("Id inexistente");
+            }
+
+            try
+            {
+                _context.Update(obj);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                // IMPORTANTE: segregação de camadas
+                // captura uma exceção a nivel de acesso a dados do entity framework
+                // e relança a exceção utilizando nossa exceção personalizada a nível de serviço
+                // sendo assim, Controllers lidam somente com excessões da camada de Serviço
+                // respeitando a arquitetura proposta no curso
+                throw new DbConcurrencyExceptionPersonalized(e.Message);
+            }
+
+        }
+
+        }
     }
-}
