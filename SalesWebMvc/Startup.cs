@@ -2,12 +2,15 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Data;
 using SalesWebMvc.Models;
 using SalesWebMvc.Services;
+using System.Globalization;
+using System.Collections.Generic;
 
 namespace SalesWebMvc
 {
@@ -54,6 +57,17 @@ namespace SalesWebMvc
         // metodo alterado na aula 252 - injeção do SeedingService
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, SeedingService seedingService)
         {
+
+            // aula 262 - configs de localidade
+            var enUS = new CultureInfo("en-US");
+            var localizationOptions = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(enUS),
+                SupportedCultures = new List<CultureInfo> { enUS },
+                SupportedUICultures = new List<CultureInfo> { enUS }
+            };
+            app.UseRequestLocalization(localizationOptions);
+
             // verifica se está no ambiente de desenvolvimento
             // ou no ambiente de produção (app publicado)
             if (env.IsDevelopment())

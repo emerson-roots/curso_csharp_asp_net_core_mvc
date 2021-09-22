@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace SalesWebMvc.Models
@@ -10,8 +11,24 @@ namespace SalesWebMvc.Models
 
         public int Id { get; set; }
         public string Name { get; set; }
+
+        [DataType(DataType.EmailAddress)]
         public string Email{ get; set; }
+
+        // aula 261 - anotação DISPLAY define que como sera
+        // mostrado o rótulo dos atributos nas telas.
+        [Display(Name = "Birth Date")]
+        // aula 261 - anotação DISPLAY
+        // DataType.Date define que o input no navegador
+        // receba somente a data. Sem esta anotação
+        // o html estava pedindo hora também
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime BirthDate { get; set; }
+
+        // aula 261 - anotação DISPLAY
+        [Display(Name = "Base Salary")]
+        [DisplayFormat(DataFormatString = "{0:F2}")]
         public double BaseSalary { get; set; }
         // associacao
         public Department Department { get; set; }
