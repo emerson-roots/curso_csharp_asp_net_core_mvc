@@ -44,10 +44,30 @@ namespace SalesWebMvc.Controllers
             return View(result);
         }
 
-        public IActionResult GroupingSearch()
+        // aula 268
+        // é basicamente o mesmo metodo SimpleSearch
+        public async Task<IActionResult> GroupingSearch(DateTime? minDate, DateTime? maxDate)
         {
-            return View();
+            //seta datas caso venha em branco da view html
+            if (!minDate.HasValue)
+            {
+                minDate = new DateTime(DateTime.Now.Year, 1, 1);
+            }
+
+            if (!maxDate.HasValue)
+            {
+                maxDate = DateTime.Now;
+            }
+
+            // envia variavel para a view html
+            ViewData["minDate"] = minDate.Value.ToString("yyyy-MM-dd");
+            ViewData["maxDate"] = maxDate.Value.ToString("yyyy-MM-dd");
+
+
+            var result = await _salesRecordsService.FindByDateGroupingAsync(minDate, maxDate);
+            return View(result);
         }
+
 
     }
 }
